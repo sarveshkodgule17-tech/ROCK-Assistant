@@ -1,0 +1,25 @@
+# Audio and Hardware
+pyaudio
+soundfile
+numpy
+psutil
+
+# Wake Word & Speech-to-Text
+pvporcupine
+SpeechRecognition
+openai-whisper
+
+# Speaker Verification (Voice Biometrics)
+speechbrain
+torchaudio
+torch
+
+# Text-to-Speech
+edge-tts
+pyttsx3
+
+# LLM Integration
+ollama
+
+# Web Search
+duckduckgo-search

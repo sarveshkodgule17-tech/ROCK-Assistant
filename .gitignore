@@ -1,0 +1,19 @@
+# Environments
+venv/
+env/
+.env
+
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Application Data & Security
+memory/
+temp_cmd.wav
+*.wav
+
+# IDE
+.vscode/
+.idea/
