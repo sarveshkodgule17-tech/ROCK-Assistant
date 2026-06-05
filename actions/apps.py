@@ -21,14 +21,18 @@ class AppActions:
             return "I couldn't launch the browser."
 
     @staticmethod
-    def open_unity():
+    def open_notepad():
         try:
-            # Assumes Unity Hub is installed in the default location
-            unity_path = r"C:\Program Files\Unity Hub\Unity Hub.exe"
-            if os.path.exists(unity_path):
-                subprocess.Popen([unity_path])
-                return "Launching Unity Hub."
-            else:
-                return "I couldn't find Unity Hub in the default installation path."
+            subprocess.Popen(["notepad.exe"])
+            return "Opening Notepad."
         except Exception:
-            return "I failed to launch Unity."
+            return "I couldn't launch Notepad."
+
+    @staticmethod
+    def open_spotify():
+        try:
+            # Attempt to launch Windows Store Spotify app
+            subprocess.Popen(["start", "spotify:"], shell=True)
+            return "Opening Spotify."
+        except Exception:
+            return "I couldn't launch Spotify."

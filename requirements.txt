@@ -23,3 +23,6 @@ ollama
 
 # Web Search
 duckduckgo-search
+
+# Vector Memory
+chromadb

@@ -4,6 +4,7 @@ from core.brain import Brain
 from actions.system import SystemActions
 from actions.apps import AppActions
 from actions.web import WebActions
+from datetime import datetime
 
 class RockAssistant:
     def __init__(self):
@@ -45,13 +46,30 @@ class RockAssistant:
                     response = SystemActions.get_memory_status()
                 elif "code" in cmd_lower or "vs code" in cmd_lower:
                     response = AppActions.open_vscode()
-                elif "unity" in cmd_lower:
-                    response = AppActions.open_unity()
+                elif "notepad" in cmd_lower or "notes" in cmd_lower:
+                    response = AppActions.open_notepad()
+                elif "spotify" in cmd_lower or "music" in cmd_lower:
+                    response = AppActions.open_spotify()
+                elif "time" in cmd_lower:
+                    current_time = datetime.now().strftime("%I:%M %p")
+                    response = f"The current time is {current_time}."
+                elif "date" in cmd_lower:
+                    current_date = datetime.now().strftime("%B %d, %Y")
+                    response = f"Today's date is {current_date}."
                 elif "browser" in cmd_lower or "chrome" in cmd_lower:
                     response = AppActions.open_browser()
                 elif "stop listening" in cmd_lower or "sleep" in cmd_lower:
                     self.audio.speak("Going offline. Wake me if you need anything.")
                     break
+                elif "remember this" in cmd_lower or "memorize this" in cmd_lower:
+                    # Extract the fact to remember
+                    fact = command.split("this:", 1)[-1].strip() if ":" in command else command.replace("remember this", "").strip()
+                    if fact:
+                        response = self.brain.remember(fact)
+                    else:
+                        response = "What would you like me to remember? Please say 'remember this' followed by the fact."
+                elif "forget everything" in cmd_lower or "erase your memory" in cmd_lower:
+                    response = self.brain.forget_everything()
                 elif any(kw in cmd_lower for kw in ["search", "look up", "what is", "who is", "tell me about", "how to"]):
                     # Gather context from the web
                     self.audio.speak("Searching the web for you...")
