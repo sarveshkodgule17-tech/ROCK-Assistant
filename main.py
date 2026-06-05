@@ -12,8 +12,8 @@ class RockAssistant:
         print(" ROCK SYSTEM INITIALIZATION ")
         print("=========================================")
         self.audio = AudioCore()
-        # Initialize the Brain with llama3, can be changed to mistral depending on what you downloaded in Ollama
-        self.brain = Brain(model_name="llama3")
+        # Initialize the Brain using the lightweight Microsoft phi3 model
+        self.brain = Brain(model_name="phi3")
         
         self.audio.speak("System initialized. ROCK is online and ready.")
 
@@ -50,6 +50,8 @@ class RockAssistant:
                     response = AppActions.open_notepad()
                 elif "spotify" in cmd_lower or "music" in cmd_lower:
                     response = AppActions.open_spotify()
+                elif "discord" in cmd_lower:
+                    response = AppActions.open_discord()
                 elif "time" in cmd_lower:
                     current_time = datetime.now().strftime("%I:%M %p")
                     response = f"The current time is {current_time}."

@@ -36,3 +36,15 @@ class AppActions:
             return "Opening Spotify."
         except Exception:
             return "I couldn't launch Spotify."
+
+    @staticmethod
+    def open_discord():
+        try:
+            discord_path = os.path.join(os.environ.get("LOCALAPPDATA", ""), "Discord", "Update.exe")
+            if os.path.exists(discord_path):
+                subprocess.Popen([discord_path, "--processStart", "Discord.exe"])
+                return "Opening Discord."
+            else:
+                return "I couldn't find Discord in the default location."
+        except Exception:
+            return "I couldn't launch Discord."
