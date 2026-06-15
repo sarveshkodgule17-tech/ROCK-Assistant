@@ -81,8 +81,13 @@ class AudioCore:
                         os.remove("temp_cmd.wav")
                         return None
                         
-                # If authorized, transcribe
-                result = self.whisper_model.transcribe("temp_cmd.wav")
+                # Load audio data using soundfile to bypass FFmpeg requirement
+                import soundfile as sf
+                audio_data, fs = sf.read("temp_cmd.wav")
+                audio_data = audio_data.astype(np.float32)
+                
+                # Transcribe the numpy array directly
+                result = self.whisper_model.transcribe(audio_data)
                 text = result["text"].strip()
                 os.remove("temp_cmd.wav")
                 return text
@@ -159,9 +164,8 @@ class AudioCore:
     def mute_system(self):
         """Mutes system audio, remembering if it was already muted."""
         try:
-            devices = AudioUtilities.GetSpeakers()
-            interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
-            self.volume_control = cast(interface, POINTER(IAudioEndpointVolume))
+            speakers = AudioUtilities.GetSpeakers()
+            self.volume_control = speakers.EndpointVolume
             self.was_muted = self.volume_control.GetMute()
             if not self.was_muted:
                 print("[System Audio] Wake Word Detected. Muting system audio...")
