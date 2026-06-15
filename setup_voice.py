@@ -1,11 +1,16 @@
 import os
 import time
-import torch
-import torchaudio
 import pyaudio
 import wave
 import numpy as np
-from speechbrain.inference.speaker import EncoderClassifier
+
+try:
+    import torch
+    import torchaudio
+    from speechbrain.inference.speaker import EncoderClassifier
+except ImportError as e:
+    print(f"Error: Required package not installed. Please install: pip install torch torchaudio speechbrain")
+    raise
 
 # Ensure memory directory exists
 os.makedirs("memory", exist_ok=True)
@@ -61,11 +66,15 @@ def enroll_voice():
         temp_file = f"temp_enroll_{i}.wav"
         record_audio(temp_file)
         
-        # Extract embedding
-        signal, fs = torchaudio.load(temp_file)
-        # Ensure correct sample rate
+        # Extract embedding using soundfile to avoid FFmpeg/TorchCodec dependencies
+        import soundfile as sf
+        data, fs = sf.read(temp_file)
+        signal = torch.FloatTensor(data).unsqueeze(0)
+        
+        # Ensure correct sample rate (pyaudio records at 16000, but let's keep the fallback)
         if fs != 16000:
-            resampler = torchaudio.transforms.Resample(orig_freq=fs, new_freq=16000)
+            import torchaudio.transforms as T
+            resampler = T.Resample(orig_freq=fs, new_freq=16000)
             signal = resampler(signal)
             
         with torch.no_grad():

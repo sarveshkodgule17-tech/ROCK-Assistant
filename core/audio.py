@@ -95,9 +95,13 @@ class AudioCore:
 
     def _verify_speaker(self, wav_path):
         """Returns True if the voice matches the enrolled user."""
-        signal, fs = torchaudio.load(wav_path)
+        import soundfile as sf
+        data, fs = sf.read(wav_path)
+        signal = torch.FloatTensor(data).unsqueeze(0)
+        
         if fs != 16000:
-            resampler = torchaudio.transforms.Resample(orig_freq=fs, new_freq=16000)
+            import torchaudio.transforms as T
+            resampler = T.Resample(orig_freq=fs, new_freq=16000)
             signal = resampler(signal)
             
         with torch.no_grad():
